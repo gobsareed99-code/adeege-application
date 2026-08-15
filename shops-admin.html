@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ADEEGE — Market Shops Management</title>
+<link rel="icon" type="image/png" href="assets/adeege-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/shops-admin.css">
+</head>
+<body>
+<div class="shell">
+<header class="top"><div class="wrap top-row"><div class="brand"><img src="assets/adeege-logo.jpg" alt="ADEEGE"><div><strong>ADEEGE APPLICATION</strong><small>Market Shops Management</small></div></div><a class="back" href="app.html">← Back to Marketplace</a></div></header>
+<section class="hero"><div class="wrap"><h1>🏪 Market Shops Management</h1><p>Create and manage the shops that appear in ADEEGE. Add the shop's contact information, location, social media, business hours, description and logo.</p></div></section>
+<main class="wrap layout">
+<section class="panel"><div class="panel-head"><div><h2 id="formTitle">Add New Market Shop</h2><p>Complete the important shop information below.</p></div></div><div class="panel-body"><div class="security">🔐 Only an authenticated ADEEGE administrator can use this page. New shops are published as approved shops and can optionally be assigned to an existing seller account.</div><form id="shopForm"><div class="field"><label>Shop owner / seller account</label><select id="shopOwner"><option value="">Loading sellers...</option></select><div class="owner-note">Leave this as ADEEGE managed if the shop owner does not yet have a seller account.</div></div><div class="grid2"><div class="field"><label>Shop name *</label><input id="shopName" maxlength="140" required placeholder="e.g. Sharma Electronics"></div><div class="field"><label>Category</label><select id="shopCategory"><option value="general">General</option><option value="electronics">Electronics</option><option value="phones">Phones</option><option value="computers">Computers</option><option value="fashion">Fashion</option><option value="shoes">Shoes</option><option value="furniture">Furniture</option><option value="appliances">Appliances</option><option value="beauty">Beauty</option><option value="groceries">Groceries</option><option value="services">Services</option><option value="other">Other</option></select></div></div><div class="grid2"><div class="field"><label>Phone</label><input id="shopPhone" placeholder="+252 61 ..."></div><div class="field"><label>WhatsApp</label><input id="shopWhatsapp" placeholder="+252 61 ..."></div></div><div class="field"><label>Email</label><input id="shopEmail" type="email" placeholder="shop@example.com"></div><div class="grid2"><div class="field"><label>District / Location</label><input id="shopLocation" placeholder="e.g. Hodan, Bakaaraha"></div><div class="field"><label>Business hours</label><input id="shopHours" placeholder="e.g. Sat–Thu, 8:00 AM–8:00 PM"></div></div><div class="field"><label>Full address / landmark</label><textarea id="shopAddress" placeholder="Street, building, nearby landmark..."></textarea></div><div class="field"><label>Shop description</label><textarea id="shopDescription" maxlength="1200" placeholder="What does this shop sell? What makes it useful to customers?"></textarea></div><div class="grid2"><div class="field"><label>Facebook page</label><input id="shopFacebook" placeholder="https://facebook.com/..."></div><div class="field"><label>TikTok profile</label><input id="shopTiktok" placeholder="https://tiktok.com/@..."></div></div><div class="field"><label>Shop logo / photo</label><div class="upload">📷<br><strong>Upload a shop logo or storefront photo</strong><input id="shopLogo" type="file" accept="image/jpeg,image/png,image/webp" style="margin-top:10px"><img id="logoPreview" alt="Shop logo preview"></div></div><label class="check"><input id="shopVerified" type="checkbox"><span><strong>Verified shop</strong><br><small>Show this shop as verified by ADEEGE.</small></span></label><div class="actions"><button class="primary" id="saveShopBtn" type="submit">Create Shop</button><button class="secondary" id="cancelEdit" type="button" style="display:none">Cancel Edit</button></div><div class="msg" id="formMsg"></div></form></div></section>
+<section class="panel"><div class="panel-head"><div><h2>Existing Shops</h2><p id="shopCount">Loading shops...</p></div><div class="toolbar"><input id="shopSearch" placeholder="Search shops..."></div></div><div class="panel-body"><div class="shops" id="shopsList"><div class="empty">Loading shops...</div></div></div></section>
+</main>
+</div>
+<script type="module" src="assets/shops-admin.js"></script>
+</body>
+</html>
