@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ADEEGE Shop</title>
+<link rel="icon" type="image/png" href="assets/adeege-favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/storefront.css">
+</head>
+<body>
+<header class="top"><div class="wrap top-row"><a class="brand" href="app.html"><img src="assets/adeege-logo.jpg" alt="ADEEGE"><span><strong>ADEEGE</strong><small>Local Seller Storefront</small></span></a><div class="top-actions"><a class="back" href="app.html#stores">← Marketplace</a><a class="cart" href="app.html" id="cartLink">🛒 Cart <span id="cartCount">0</span></a></div></div></header>
+<main>
+<section class="store-hero"><div class="wrap"><div id="storeHero" class="store-card"><div class="loading">Loading shop...</div></div></div></section>
+<section class="products-section"><div class="wrap"><div class="section-head"><div><div class="eyebrow">STORE PRODUCTS</div><h2 id="productTitle">Products</h2><p id="productCount">Loading products...</p></div><div class="search"><input id="productSearch" placeholder="Search this shop..."></div></div><div id="productGrid" class="products"><div class="empty">Loading products...</div></div></div></section>
+</main>
+<div class="toast" id="toast"></div>
+<script defer src="assets/storefront.js"></script>
+</body>
+</html>
