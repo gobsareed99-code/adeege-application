@@ -1,0 +1,17 @@
+{
+  "applicationId": "com.adeege.application",
+  "appName": "ADEEGE APPLICATION",
+  "launcherName": "ADEEGE",
+  "hostName": "gobsareed99-code.github.io",
+  "launchUrl": "/adeege-application/stable.html?source=android",
+  "webManifestUrl": "https://gobsareed99-code.github.io/adeege-application/manifest.webmanifest",
+  "scopeUrl": "https://gobsareed99-code.github.io/adeege-application/",
+  "themeColor": "#087a3f",
+  "backgroundColor": "#ffffff",
+  "display": "standalone",
+  "orientation": "portrait",
+  "versionName": "1.0.0",
+  "versionCode": 1,
+  "fallbackType": "customtabs",
+  "notes": "Trusted Web Activity configuration for ADEEGE. Never commit the release keystore or passwords. Digital Asset Links must be updated with the SHA-256 fingerprint of the final app signing certificate before Play Store release."
+}
