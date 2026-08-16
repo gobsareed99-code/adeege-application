@@ -4,7 +4,7 @@ const addAdminLink=()=>{const nav=document.querySelector('.nav .container');if(n
 async function loadStores(){if(storeMap)return storeMap;try{const c=new AbortController(),tm=setTimeout(()=>c.abort(),8000);const r=await fetch(API+'/rest/v1/marketplace_stores?select=id,name&status=eq.approved&limit=100',{headers:{apikey:KEY,Authorization:'Bearer '+KEY},signal:c.signal});clearTimeout(tm);if(!r.ok)return new Map();const rows=await r.json();storeMap=new Map(rows.map(s=>[String(s.name||'').trim().toLowerCase(),s.id]));return storeMap}catch{return new Map()}}
 async function decorateStores(){if(decorating)return;decorating=true;try{const grid=document.getElementById('storesGrid');if(!grid)return;const map=await loadStores();grid.querySelectorAll('.trust-card').forEach(card=>{if(card.querySelector('.visit-shop-btn'))return;const name=card.querySelector('h3')?.textContent?.trim();const id=map.get(String(name||'').toLowerCase());if(!id)return;const a=document.createElement('a');a.className='visit-shop-btn';a.href='shop.html?store='+encodeURIComponent(id);a.textContent='🏪 Visit Shop';a.style.cssText='display:inline-block;margin-top:12px;padding:10px 13px;border-radius:8px;background:#0b4f78;color:#fff;font-size:10px;font-weight:900';card.appendChild(a)})}finally{decorating=false}}
 function start(){
-  loadScript('adeegeCoreProtection','assets/core-protection.js?v=1');
+  loadScript('adeegeCoreProtection','assets/core-protection.js?v=2');
   loadScript('homepageRedesignScript','assets/homepage-redesign.js?v=3');
   loadScript('founderSectionScript','assets/founder-section.js?v=2');
   loadScript('workflowSectionScript','assets/workflow-section.js?v=2');
