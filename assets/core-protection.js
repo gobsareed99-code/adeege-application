@@ -20,6 +20,27 @@ function ensureLanguageSwitcher(){
   syncLanguage();
 }
 
+function ensureAdminEntry(){
+  const nav=document.querySelector('.nav .container');
+  if(!nav)return;
+  let btn=document.getElementById('adeegeProtectedAdmin');
+  if(!btn){
+    btn=document.createElement('button');
+    btn.id='adeegeProtectedAdmin';
+    btn.type='button';
+    btn.textContent='🛡️ Admin';
+    btn.style.cssText='display:none;border:0;border-radius:9px;padding:10px 14px;background:#0b7f40;color:#fff;font-weight:900;cursor:pointer';
+    btn.addEventListener('click',()=>{
+      const account=document.getElementById('accountBtn');
+      const dash=document.getElementById('dashboardQuick');
+      if(dash&&dash.offsetParent!==null)dash.click();
+      else if(account)account.click();
+    });
+    nav.appendChild(btn);
+  }
+  btn.style.display=isAdmin?'inline-flex':'none';
+}
+
 function protectAdminDom(){
   const modal=document.getElementById('dashboardModal');
   const account=document.getElementById('accountBtn');
@@ -34,6 +55,7 @@ function protectAdminDom(){
     if(dash){dash.style.display='';dash.dataset.adminCore='true'}
     if(role&&document.getElementById('dashboardModal')?.classList.contains('show'))role.textContent='ADMIN';
   }
+  ensureAdminEntry();
 }
 
 async function initAdminProtection(){
@@ -50,13 +72,14 @@ async function initAdminProtection(){
 }
 
 function protectCore(){
-  document.documentElement.dataset.adeegeCore='protected-v2';
+  document.documentElement.dataset.adeegeCore='protected-v3';
   ensureLanguageSwitcher();
+  ensureAdminEntry();
   protectAdminDom();
   initAdminProtection();
 }
 let timer;
-const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{ensureLanguageSwitcher();protectAdminDom()},60)});
-function start(){protectCore();obs.observe(document.body,{childList:true,subtree:true});setInterval(()=>{ensureLanguageSwitcher();protectAdminDom();initAdminProtection()},5000)}
+const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom()},60)});
+function start(){protectCore();obs.observe(document.body,{childList:true,subtree:true});setInterval(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom();initAdminProtection()},3000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
