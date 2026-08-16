@@ -5,7 +5,7 @@ async function loadStores(){if(storeMap)return storeMap;try{const c=new AbortCon
 async function decorateStores(){if(decorating)return;decorating=true;try{const grid=document.getElementById('storesGrid');if(!grid)return;const map=await loadStores();grid.querySelectorAll('.trust-card').forEach(card=>{if(card.querySelector('.visit-shop-btn'))return;const name=card.querySelector('h3')?.textContent?.trim();const id=map.get(String(name||'').toLowerCase());if(!id)return;const a=document.createElement('a');a.className='visit-shop-btn';a.href='shop.html?store='+encodeURIComponent(id);a.textContent='🏪 Visit Shop';a.style.cssText='display:inline-block;margin-top:12px;padding:10px 13px;border-radius:8px;background:#0b4f78;color:#fff;font-size:10px;font-weight:900';card.appendChild(a)})}finally{decorating=false}}
 function start(){
   loadScript('adeegeCoreRecovery','assets/core-recovery.js?v=1');
-  loadScript('adeegeCoreProtection','assets/core-protection.js?v=3');
+  loadScript('adeegeCoreProtection','assets/core-protection.js?v=4');
   loadScript('homepageRedesignScript','assets/homepage-redesign.js?v=3');
   loadScript('founderSectionScript','assets/founder-section.js?v=2');
   loadScript('workflowSectionScript','assets/workflow-section.js?v=2');
