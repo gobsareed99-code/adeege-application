@@ -1,7 +1,7 @@
 (()=>{'use strict';
 const API='https://tjwoqvqfavxqykvbasaf.supabase.co';
 const KEY='sb_publishable_3XeoEp9EqRqPLPIm5Cwthg_Pf1lEYUZ';
-let sb=null,isAdmin=false,checking=false;
+let sb=null,isAdmin=false,hasSession=false,checking=false;
 
 function ensureLanguageSwitcher(){
   const actions=document.querySelector('.head-actions');
@@ -20,6 +20,24 @@ function ensureLanguageSwitcher(){
   syncLanguage();
 }
 
+function showNotice(message){
+  const toast=document.getElementById('toast');
+  if(toast){toast.textContent=message;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3200)}
+  else alert(message);
+}
+
+async function verifyAdmin(){
+  try{
+    if(!sb){const mod=await import('https://esm.sh/@supabase/supabase-js@2.57.4');sb=mod.createClient(API,KEY)}
+    const {data:{session}}=await sb.auth.getSession();
+    hasSession=!!session;
+    if(!session){isAdmin=false;return false}
+    const {data,error}=await sb.rpc('adeege_is_admin');
+    isAdmin=!error&&data===true;
+    return isAdmin;
+  }catch(e){console.warn('ADEEGE admin verification unavailable',e);return false}
+}
+
 function ensureAdminEntry(){
   const nav=document.querySelector('.nav .container');
   if(!nav)return;
@@ -28,58 +46,56 @@ function ensureAdminEntry(){
     btn=document.createElement('button');
     btn.id='adeegeProtectedAdmin';
     btn.type='button';
-    btn.textContent='🛡️ Admin';
-    btn.style.cssText='display:none;border:0;border-radius:9px;padding:10px 14px;background:#0b7f40;color:#fff;font-weight:900;cursor:pointer';
-    btn.addEventListener('click',()=>{
-      const account=document.getElementById('accountBtn');
-      const dash=document.getElementById('dashboardQuick');
-      if(dash&&dash.offsetParent!==null)dash.click();
-      else if(account)account.click();
+    btn.innerHTML='🛡️ <span>Admin</span>';
+    btn.setAttribute('aria-label','Open ADEEGE Admin');
+    btn.style.cssText='display:inline-flex!important;align-items:center;gap:6px;border:1px solid #096a38;border-radius:9px;padding:10px 15px;background:#0b7f40;color:#fff;font-weight:900;cursor:pointer;white-space:nowrap';
+    btn.addEventListener('click',async()=>{
+      btn.disabled=true;
+      try{
+        const allowed=await verifyAdmin();
+        if(!hasSession){document.getElementById('accountBtn')?.click();showNotice('Login with your Admin account to continue.');return}
+        if(!allowed){showNotice('This account does not have Admin access.');return}
+        const dash=document.getElementById('dashboardQuick');
+        if(dash){dash.click();setTimeout(()=>{const role=document.getElementById('dashRole');if(role)role.textContent='ADMIN'},120)}
+        else showNotice('Admin dashboard is loading. Please try again.');
+      }finally{btn.disabled=false}
     });
-    nav.appendChild(btn);
+    const dashboard=document.getElementById('dashboardQuick');
+    if(dashboard&&dashboard.parentNode===nav)nav.insertBefore(btn,dashboard.nextSibling);else nav.appendChild(btn);
   }
-  btn.style.display=isAdmin?'inline-flex':'none';
+  btn.style.display='inline-flex';
 }
 
 function protectAdminDom(){
   const modal=document.getElementById('dashboardModal');
   const account=document.getElementById('accountBtn');
-  const label=document.getElementById('accountLabel');
   const dash=document.getElementById('dashboardQuick');
   const role=document.getElementById('dashRole');
   if(modal)modal.dataset.adeegeCore='admin-dashboard';
   if(account)account.dataset.adeegeCore='account';
   if(dash)dash.dataset.adeegeCore='dashboard-entry';
-  if(isAdmin){
-    if(label)label.textContent='Admin';
-    if(dash){dash.style.display='';dash.dataset.adminCore='true'}
-    if(role&&document.getElementById('dashboardModal')?.classList.contains('show'))role.textContent='ADMIN';
-  }
+  if(isAdmin&&role&&modal?.classList.contains('show'))role.textContent='ADMIN';
   ensureAdminEntry();
 }
 
 async function initAdminProtection(){
   if(checking)return;checking=true;
   try{
-    if(!sb){const mod=await import('https://esm.sh/@supabase/supabase-js@2.57.4');sb=mod.createClient(API,KEY)}
-    const {data:{session}}=await sb.auth.getSession();
-    if(!session){isAdmin=false;protectAdminDom();return}
-    const {data,error}=await sb.rpc('adeege_is_admin');
-    isAdmin=!error&&data===true;
+    await verifyAdmin();
     protectAdminDom();
-    if(!window.__adeegeCoreAuthBound){window.__adeegeCoreAuthBound=true;sb.auth.onAuthStateChange(()=>setTimeout(()=>{checking=false;initAdminProtection()},100))}
-  }catch(e){console.warn('ADEEGE core admin protection unavailable',e)}finally{checking=false}
+    if(sb&&!window.__adeegeCoreAuthBound){window.__adeegeCoreAuthBound=true;sb.auth.onAuthStateChange(()=>setTimeout(()=>{checking=false;initAdminProtection()},100))}
+  }finally{checking=false}
 }
 
 function protectCore(){
-  document.documentElement.dataset.adeegeCore='protected-v3';
+  document.documentElement.dataset.adeegeCore='protected-v4';
   ensureLanguageSwitcher();
   ensureAdminEntry();
   protectAdminDom();
   initAdminProtection();
 }
 let timer;
-const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom()},60)});
-function start(){protectCore();obs.observe(document.body,{childList:true,subtree:true});setInterval(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom();initAdminProtection()},3000)}
+const obs=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom()},80)});
+function start(){protectCore();obs.observe(document.body,{childList:true,subtree:true});setInterval(()=>{ensureLanguageSwitcher();ensureAdminEntry();protectAdminDom();initAdminProtection()},4000)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
