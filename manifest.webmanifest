@@ -1,0 +1,29 @@
+{
+  "name": "ADEEGE APPLICATION",
+  "short_name": "ADEEGE",
+  "description": "ADEEGE APPLICATION — Somali marketplace for customers, sellers, delivery and marketplace services.",
+  "id": "./stable.html",
+  "start_url": "./stable.html?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#087a3f",
+  "lang": "so",
+  "dir": "ltr",
+  "categories": ["shopping", "business", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/adeege-favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/adeege-logo.jpg",
+      "sizes": "any",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
