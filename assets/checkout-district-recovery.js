@@ -1,0 +1,19 @@
+(()=>{'use strict';
+const API='https://tjwoqvqfavxqykvbasaf.supabase.co';
+const KEY='sb_publishable_3XeoEp9EqRqPLPIm5Cwthg_Pf1lEYUZ';
+const FALLBACK=[
+ ['Abdiaziz',1.50],['Bondhere',0],['Daynile',0],['Dharkenley',0],['Hamar Jajab',0],['Hamar Weyne',0],['Hodan',0],['Howlwadaag',0],['Huriwaa',0],['Karaan',0],['Kaxda',0],['Shangani',0],['Shibis',0],['Waberi',0],['Wadajir',0],['Warta Nabada',0],['Yaqshid',0]
+];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const money=n=>'$'+Number(n||0).toFixed(2);
+function cart(){try{const x=JSON.parse(localStorage.getItem('adeege_v2_cart')||'[]');return Array.isArray(x)?x:[]}catch{return[]}}
+async function fetchFees(){const url=API+'/rest/v1/marketplace_delivery_fees?select=district_name,fee,district_key,sort_order&active=eq.true&order=sort_order.asc';const c=new AbortController();const t=setTimeout(()=>c.abort(),5000);try{const r=await fetch(url,{headers:{apikey:KEY,Authorization:'Bearer '+KEY},cache:'no-store',signal:c.signal});if(!r.ok)throw new Error('fees unavailable');const rows=await r.json();return (rows||[]).filter(x=>x.district_key!=='default').map(x=>[x.district_name,Number(x.fee||0)])}finally{clearTimeout(t)}}
+function currentLang(){return (localStorage.getItem('adeege_language')||document.documentElement.lang||'en')==='so'?'so':'en'}
+function fill(rows){const s=document.getElementById('checkoutDistrict');if(!s)return false;const old=s.value;const lang=currentLang();s.innerHTML=`<option value="">${lang==='so'?'Dooro degmada':'Choose district'}</option>`+rows.map(([name,fee])=>`<option value="${esc(name)}" data-fee="${fee}">${esc(name)}${fee>0?' — '+money(fee):''}</option>`).join('');if(old&&[...s.options].some(o=>o.value===old))s.value=old;s.disabled=false;s.dataset.districtReady='1';updateEstimate();return true}
+async function populate(){const s=document.getElementById('checkoutDistrict');if(!s)return;if(s.dataset.districtReady==='1'&&s.options.length>2)return;try{const rows=await fetchFees();fill(rows.length?rows:FALLBACK)}catch(e){fill(FALLBACK)}}
+async function productPrices(ids){if(!ids.length)return[];try{const q=encodeURIComponent('('+ids.map(x=>'"'+String(x).replaceAll('"','')+'"').join(',')+')');const r=await fetch(API+'/rest/v1/marketplace_products?select=id,price,store_id&id=in.'+q,{headers:{apikey:KEY,Authorization:'Bearer '+KEY},cache:'no-store'});return r.ok?await r.json():[]}catch{return[]}}
+async function updateEstimate(){const s=document.getElementById('checkoutDistrict');if(!s)return;const items=cart();const ids=items.map(x=>x.product_id);const ps=await productPrices(ids);let subtotal=0;for(const c of items){const p=ps.find(x=>String(x.id)===String(c.product_id));if(p)subtotal+=Number(p.price||0)*Number(c.quantity||0)}const opt=s.selectedOptions?.[0];const base=Number(opt?.dataset?.fee||0);const stores=new Set(ps.map(p=>p.store_id).filter(Boolean)).size||1;const fee=base*stores;const a=document.getElementById('checkoutSubtotal'),b=document.getElementById('deliveryFeeEstimate'),g=document.getElementById('checkoutGrandTotal');if(a)a.textContent=money(subtotal);if(b)b.textContent=money(fee);if(g)g.textContent=money(subtotal+fee)}
+function bind(){const s=document.getElementById('checkoutDistrict');if(s&&!s.dataset.districtBound){s.dataset.districtBound='1';s.addEventListener('change',updateEstimate)}const checkout=document.getElementById('checkoutBtn');if(checkout&&!checkout.dataset.districtBound){checkout.dataset.districtBound='1';checkout.addEventListener('click',()=>setTimeout(populate,60))}}
+function start(){populate();bind();setInterval(()=>{bind();const s=document.getElementById('checkoutDistrict');if(s&&(!s.options.length||/loading/i.test(s.options[0]?.textContent||'')))populate()},3000)}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
+})();
