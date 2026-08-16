@@ -3,10 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="refresh" content="0;url=app.html?v=28">
 <title>ADEEGE APPLICATION</title>
 <link rel="canonical" href="app.html">
-<script>location.replace('app.html?v=28'+location.hash)</script>
+<script>
+(function(){
+  try{
+    const raw=localStorage.getItem('adeege_v2_cart');
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(!Array.isArray(parsed)) localStorage.setItem('adeege_v2_cart','[]');
+    }
+  }catch(e){
+    localStorage.setItem('adeege_v2_cart','[]');
+  }
+  location.replace('app.html?v=29'+location.hash);
+})();
+</script>
 </head>
-<body><p>Opening <a href="app.html?v=28">ADEEGE Marketplace</a>…</p></body>
+<body><p>Opening <a href="app.html?v=29">ADEEGE Marketplace</a>…</p></body>
 </html>
