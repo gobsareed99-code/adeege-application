@@ -1,0 +1,10 @@
+# Never commit Android signing credentials
+*.keystore
+*.jks
+keystore.properties
+local.properties
+
+# Android/Gradle build outputs
+.gradle/
+build/
+app/build/
